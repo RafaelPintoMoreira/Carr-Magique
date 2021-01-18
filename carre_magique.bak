@@ -1,0 +1,156 @@
+program carreMagique;
+//BUT:      creer un carre magique impaire
+//ENTRER:   nbr impaire en constante pour le tableau
+//SORTIE:   les nummero dans le carre magique
+uses crt;
+
+CONST
+    tailleCareer=3;
+
+TYPE
+    tblC=array[1..tailleCareer,1..tailleCareer] of integer;
+
+FUNCTION initnbr (n:integer):integer;
+begin
+    initnbr:=n*n;
+end;
+
+FUNCTION initTbl (nbr:integer):tblC;
+VAR i,j:integer;
+begin
+    for i:=1 to nbr do
+        for j:=1 to nbr do
+            initTbl[i,j]:=0;
+end;
+
+PROCEDURE afficheCarre (t:tblC;nbr:integer);
+VAR i,j : integer;
+begin
+    for i:=1 to nbr do
+    begin
+        for j:=1 to nbr do
+        begin
+            gotoxy(i*4,j*3);
+            write (t[i,j]);
+        end;
+    end;
+end;
+
+FUNCTION RempTbl (t:tblC;nbr,nMax:integer):tblC;
+VAR  i,j,itemp,jtemp,n:integer;
+begin
+    n:=1;
+    t[3,2]:=n;
+    while (n<nMax) do
+    begin
+        for i := 1 to nbr do
+        begin
+            itemp:=i;
+            for j := 1 to nbr do
+            begin
+                jtemp:=j;
+                if (t[i,j]=n) then
+                begin
+                    if (itemp=nbr)or(jtemp=1) then
+                    begin
+                        if (jtemp=1) then
+                            jtemp:=nbr;
+
+                        if (itemp=nbr) then
+                        begin
+                            itemp:=1;
+                            if (t[itemp,jtemp-1]=0) then
+                            begin
+                                t[itemp,jtemp-1]:=n+1;
+                                n:=n+1;
+                            end
+                            else
+                            begin
+                                if (t[i,jtemp-1]=0)then
+                                begin
+                                   t[i,jtemp-1]:=n+1;
+                                   n:=n+1;
+                                end;
+                            end;
+                        end
+                        else
+                        begin
+                            if (t[itemp+1,jtemp]=0) then
+                            begin
+                                t[itemp+1,jtemp]:= n+1;
+                                n:=n+1;
+                            end
+                            else
+                            begin
+                                if (t[itemp,jtemp-1]=0)then
+                                begin
+                                   t[itemp,jtemp-1]:=n+1;
+                                   n:=n+1;
+                                end;
+                            end;
+                        end;
+                    end
+                    else
+                    begin
+                        if (t[itemp+1,jtemp-1]=0) then
+                        begin
+                            t[itemp+1,jtemp-1]:=n+1;
+                            n:=n+1;
+                        end
+                        else
+                        begin
+                            if (jtemp=2)then
+                            begin
+                                jtemp:=nbr;
+                                if (t[itemp,jtemp]=0)then
+                                begin
+                                    t[itemp,jtemp]:=n+1;
+                                    n:=n+1;
+                                end;
+                            end
+                            else
+                            begin
+                                if (t[itemp,jtemp-2]=0)then
+                                begin
+                                    t[itemp,jtemp-2]:=n+1;
+                                    n:=n+1;
+                                end;
+                            end;
+                        end;
+                    end;
+                end;
+            end;
+        end;
+        {afficheCarre(t,nbr);
+        gotoxy(20,20);
+        writeln('OK');
+        write(n);
+        readln;}
+    end;
+    RempTbl:=t;
+end;
+
+{FUNCTION addLigne (t:tblC;nbr:integer):integer;
+VAR i,j:integer;
+begin
+    for i:=1 to nbr do
+
+end;}
+
+var map:tblC;
+    nbrMax:integer;
+//program principal
+BEGIN
+    clrscr;
+    nbrMax:=initnbr(tailleCareer);
+    write(nbrMax);
+    readln;
+    clrscr;
+    map:=initTbl(tailleCareer);
+    afficheCarre(map,tailleCareer);
+    readln;
+    clrscr;
+    map:=RempTbl(map,tailleCareer,nbrMax);
+    afficheCarre(map,tailleCareer);
+    readln;
+END.

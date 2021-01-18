@@ -1,0 +1,148 @@
+ALGO: carreMagique
+//BUT:      creer un carre magique impaire
+//ENTRER:   nbr impaire en constante pour le tableau 
+//SORTIE:   les nummero dans le carre magique
+
+CONST 
+    tailleCareer<--5:ENTIER
+
+TYPE
+    tblC=tableau[1..tailleCareer,1..tailleCareer] de ENTIER
+
+FONCTION initnbr (n:ENTIER):ENTIER
+//BUT:   racine carrer de la const 
+//ENTRER: nbr
+//SORTIE: racine carrer
+
+    initnbr<--n*n
+FINFONCTION
+
+FONCTION initTbl (nbr:ENTIER):tblC
+//BUT:   initiation de la map avec des zero
+//ENTRER: nbr
+//SORTIE:  la map plien de 0
+
+VAR i,j:ENTIER
+    POUR i DE 1 A nbr FAIRE
+        POUR j DE 1 A nbr FAIRE
+            initTbl[i,j]<--0
+        FINPOUR
+    FINPOUR
+FINFONCTION
+
+FONCTION RempTbl (t:tblC;nbr,nMax:ENTIER):tblC
+//BUT:  remplacer les 0 par le nombre corespendan pour creer le carreMagique
+//ENTRER: map,nbr de la taille du Career et nbr maximal a atteindre
+//SORTIE: carrer magique
+
+VAR  i,j,itemp,jtemp,n:ENTIER
+        
+    n<--1
+    t[2,3]<--n
+    repeter
+        POUR i DE 1 A nbr FAIRE
+            itemp<--i
+            POUR j DE 1 A nbr FAIRE
+                jtemp<--j
+               SI (t[i,j]=n) ALORS
+                    SI (itemp=nbr)ou(jtemp=1) ALORS
+                        SI(jtemp=1)ALORS
+                            jtemp<--nbr
+                        FINSI
+                        SI (itemp=nbr) ALORS
+                            itemp<--1
+                            SI (t[itemp,jtemp-1]=0) ALORS
+                                t[itemp,jtemp-1]<-- n+1
+                                n<--n+1
+                            SINON
+                                SI (t[i,jtemp-1]=0)ALORS
+                                   t[t[i,jtemp-1]<--n+1
+                                   n<--n+1
+                                FINSI
+                            FINSI    
+                        SINON
+                            SI (t[itemp+1,jtemp]=0) ALORS
+                                t[itemp+1,jtemp]<-- n+1
+                                n<--n+1
+                            SINON
+                                SI (t[itemp,jtemp-1]=0)ALORS
+                                   t[t[itemp,jtemp-1]<--n+1
+                                   n<--n+1
+                                FINSI
+                            FINSI
+                        FINSI
+                    SINON
+                        SI (t[itemp+1,jtemp-1]=0) ALORS
+                            t[itemp+1,jtemp-1]<--n+1
+                            n<--n+1
+                        SINON
+                            SI (jtemp=2)ALORS
+                                jtemp<--nbr
+                                SI (t[itemp,jtemp]=0)ALORS
+                                    t[itemp,jtemp]<--n+1
+                                    n<--n+1
+                                FINSI
+                            SINON
+                                SI (t[itemp,jtemp-2]=0)ALORS
+                                    t[itemp,jtemp-2]<--n+1
+                                    n<--n+1
+                                FINSI
+                        FINSI
+                    FINSI
+                FINSI
+            FINPOUR
+        FINPOUR
+    jusqua (n=nMax)
+    RempTbl<--t
+FINPROCEDURE
+
+PROCEDURE afficheCarre (t:tblC;nbr:ENTIER)
+//BUT:   afficher le tbl 
+//ENTRER: le tbl et la taille du tbl
+//SORTIE: 
+
+VAR i,j : ENTIER
+
+    POUR i DE 1 A nbr FAIRE
+        POUR j DE 1 A nbr FAIRE
+            ALLERA(i*2,j+1)
+            ECRIRE t[i,j]
+        FINPOUR
+    FINPOUR
+FINPROCEDURE
+
+PROCEDURE addLigne (t:tblC;nbr:ENTIER)
+//BUT:  afficher la somme des ligne 
+//ENTRER: tbl et la taille du tbl
+//SORTIE:
+
+VAR i,j,k,somme_V,somme_H:ENTIER
+    j<--1
+    k<--20
+    repeter
+        somme_H<--0
+        somme_V<--0
+        POUR i DE 1 A nbr FAIRE
+            somme_H<--somme_H+t[i,j]
+            somme_V<--somme_V+t[j,i]
+        FINPOUR
+        ALLERA(20,k);
+        ECRIRE somme_H+'= somme de la ligne H num :'+j+' _ '+somme_V+'= somme de la ligne V num :'+j
+        j<--j+1
+        k<--k+1
+    jusqua (j>nbr)
+FINPROCEDURE
+
+var map:tblC
+    nbrMax:ENTIER
+//program principal
+DEBUT
+    nbrMax:=initnbr(tailleCareer)
+    ECRIRE nbrMax
+    map<--initTbl(tailleCareer);
+    afficheCarre(map,tailleCareer)
+
+    map<--RempTbl(map,tailleCareer,nbrMax)
+    afficheCarre(map,tailleCareer)
+    addLigne(map,tailleCareer)
+FIN
